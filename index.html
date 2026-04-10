@@ -1,175 +1,208 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TradeX Ultimate</title><style>
+<title>TradeX Fixed</title>
+
+<style>
 body{margin:0;font-family:Arial;background:#000;color:#fff}
 .header{background:#ff9800;padding:15px;text-align:center;font-weight:bold}
-.card{background:#111;margin:10px;padding:15px;border-radius:10px}
-input,button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:6px}
+.card{background:#111;padding:15px;margin:10px;border-radius:10px}
+input,button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:5px}
 button{background:#ff9800;color:#fff}
-.nav{position:fixed;bottom:0;width:100%;display:flex;background:#111}
-.nav button{flex:1;background:#222}
-.chat{height:200px;overflow:auto;background:#000;padding:10px;border-radius:8px}
-</style></head>
-<body><div class="header">🔥 TradeX Ultimate</div><!-- AUTH --><div id="auth" class="card">
+</style>
+</head>
+
+<body>
+
+<div class="header">🔥 TradeX FIXED</div>
+
+<div id="auth">
+<div class="card">
 <h3>Signup</h3>
-<input id="su_email" placeholder="Email">
-<input id="su_pass" placeholder="Password">
-<button onclick="signup()">Signup</button><h3>Login</h3>
-<input id="email" placeholder="Email">
-<input id="pass" placeholder="Password">
-<button onclick="login()">Login</button>
-</div><!-- DASHBOARD --><div id="dashboard" style="display:none"><div class="card">
-<h3>Welcome <span id="user"></span></h3>
-<p>Balance: $<span id="bal">0</span></p>
-<button onclick="openDeposit()">Deposit</button>
-<button onclick="withdraw()">Withdraw</button>
-</div><div class="card">
-<h3>Trade</h3>
-<input placeholder="Amount">
-<button onclick="goSupport()">Buy</button>
-<button onclick="goSupport()">Sell</button>
-</div><div class="card">
-<h3>Market</h3>
-<select onchange="changeCoin(this.value)">
-<option value="BTCUSDT">BTC</option>
-<option value="ETHUSDT">ETH</option>
-<option value="BNBUSDT">BNB</option>
-</select>
-<iframe id="chart" width="100%" height="300"></iframe>
-</div><!-- SUPPORT PAGE --><div id="supportPage" class="card" style="display:none">
-<h3>Customer Support</h3>
-<div id="chatBox" class="chat">
-<p><b>Support:</b> Hello 👋</p>
+<input id="su_user">
+<input id="su_email">
+<input id="su_pass">
+<button onclick="signup()">Signup</button>
 </div>
-<input id="msg" placeholder="Type message">
-<button onclick="sendMsg()">Send</button>
-</div><!-- ADMIN --><div id="adminPanel" class="card" style="display:none">
-<h3>Admin Panel</h3>
-<input id="targetEmail" placeholder="User Email">
-<input id="amount" placeholder="+ / - amount">
-<button onclick="updateBalance()">Update Balance</button>
-</div><button onclick="logout()">Logout</button>
 
-</div><!-- NAV --><div class="nav">
-<button onclick="showHome()">Home</button>
-<button onclick="showMarket()">Market</button>
-<button onclick="openTelegram()">Support</button>
-</div><script>
+<div class="card">
+<h3>Login</h3>
+<input id="li_email">
+<input id="li_pass">
+<button onclick="login()">Login</button>
+</div>
+</div>
 
-const ADMIN="admin@tradex.com";
+<div id="dashboard" style="display:none">
+<div class="card">
+<h3>Welcome <span id="user"></span></h3>
+<p id="email"></p>
+<h2>$<span id="bal">0</span></h2>
+</div>
+
+<button onclick="openSupport()">Customer Support 💬</button>
+<button onclick="logout()">Logout</button>
+
+<div id="adminPanel" style="display:none">
+<h3>Admin Messages</h3>
+<div id="adminMessages"></div>
+</div>
+
+</div>
+
+<!-- CHAT UI -->
+<div id="supportBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;">
+<div style="background:#222;padding:10px;">
+Support Chat
+<button onclick="closeSupport()">X</button>
+</div>
+
+<div id="chatArea" style="height:70%;overflow:auto;"></div>
+
+<input id="supportMsg">
+<button onclick="sendSupport()">Send</button>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const app = initializeApp({
+apiKey: "AIzaSyCb...",
+authDomain: "tradex-support.firebaseapp.com",
+projectId: "tradex-support"
+});
+
+const db = getFirestore(app);
+
+let currentChatUser = "";
 
 // SIGNUP
-function signup(){
-let e=su_email.value;
-let p=su_pass.value;
-
-if(!e||!p){alert("Enter details");return;}
-
-let data={email:e,pass:p,user:e,balance:0};
-localStorage.setItem("user_"+e,JSON.stringify(data));
-alert("Signup Success");
+window.signup = async function(){
+  await addDoc(collection(db,"users"),{
+    user: su_user.value,
+    email: su_email.value,
+    pass: su_pass.value,
+    balance: 0
+  });
+  alert("Signup Done");
 }
 
 // LOGIN
-function login(){
-let e=email.value;
-let p=pass.value;
+window.login = async function(){
+  let snap = await getDocs(collection(db,"users"));
 
-let saved=localStorage.getItem("user_"+e);
-if(!saved){alert("No user");return;}
+  snap.forEach(docSnap=>{
+    let d = docSnap.data();
 
-let data=JSON.parse(saved);
-if(data.pass!==p){alert("Wrong password");return;}
+    if(d.email==li_email.value && d.pass==li_pass.value){
 
-localStorage.setItem("currentUser",e);
-loadUser();
+      localStorage.setItem("user",JSON.stringify({...d,id:docSnap.id}));
+
+      user.innerText=d.user;
+      email.innerText=d.email;
+      bal.innerText=d.balance;
+
+      auth.style.display="none";
+      dashboard.style.display="block";
+
+      if(d.email=="admin@tradex.com"){
+        adminPanel.style.display="block";
+        loadAdminMessages();
+      }
+    }
+  });
 }
 
-// LOAD USER
-function loadUser(){
-let e=localStorage.getItem("currentUser");
-if(!e)return;
-
-let data=JSON.parse(localStorage.getItem("user_"+e));
-
-auth.style.display="none";
-dashboard.style.display="block";
-
-user.innerText=data.user;
-bal.innerText=data.balance;
-
-if(e===ADMIN){adminPanel.style.display="block";}
+// CHAT OPEN
+window.openSupport = function(){
+  supportBox.style.display="block";
+  loadChat();
 }
 
-window.onload=function(){
-loadUser();
-changeCoin('BTCUSDT');
+// CLOSE
+window.closeSupport = function(){
+  supportBox.style.display="none";
 }
 
-// LOGOUT
-function logout(){
-localStorage.removeItem("currentUser");
-location.reload();
+// USER CHAT
+async function loadChat(){
+  let u = JSON.parse(localStorage.getItem("user"));
+  let snap = await getDocs(collection(db,"support"));
+
+  let html="";
+
+  snap.forEach(doc=>{
+    let d = doc.data();
+    if(d.email==u.email){
+      html += `<p>${d.message}</p>`;
+    }
+  });
+
+  chatArea.innerHTML=html;
 }
 
-// ADMIN BALANCE
-function updateBalance(){
-let admin=localStorage.getItem("currentUser");
-if(admin!==ADMIN){alert("Only admin");return;}
+// ADMIN CHAT LOAD
+async function loadAdminChat(){
+  let snap = await getDocs(collection(db,"support"));
+  let html="";
 
-let target=targetEmail.value;
-let amt=parseInt(amount.value);
+  snap.forEach(doc=>{
+    let d = doc.data();
 
-let saved=localStorage.getItem("user_"+target);
-if(!saved){alert("User not found");return;}
+    if(d.email==currentChatUser){
+      html += `<p>${d.sender}: ${d.message}</p>`;
+    }
+  });
 
-let data=JSON.parse(saved);
-data.balance+=amt;
-
-localStorage.setItem("user_"+target,JSON.stringify(data));
-
-if(localStorage.getItem("currentUser")===target){
-bal.innerText=data.balance;
+  chatArea.innerHTML=html;
 }
 
-alert("Updated ✅");
+// SEND MESSAGE
+window.sendSupport = async function(){
+  let u = JSON.parse(localStorage.getItem("user"));
+  let msg = supportMsg.value;
+
+  let email = currentChatUser || u.email;
+  let sender = currentChatUser ? "admin" : "user";
+
+  await addDoc(collection(db,"support"),{
+    email,
+    message: msg,
+    sender
+  });
+
+  supportMsg.value="";
+
+  currentChatUser ? loadAdminChat() : loadChat();
 }
 
-// SUPPORT
-function goSupport(){
-alert("Contact customer support");
-openTelegram();
+// ADMIN LIST
+async function loadAdminMessages(){
+  let snap = await getDocs(collection(db,"support"));
+  let html="";
+
+  snap.forEach(doc=>{
+    let d = doc.data();
+
+    html += `<p onclick="openAdminChat('${d.email}')">${d.email}</p>`;
+  });
+
+  adminMessages.innerHTML=html;
 }
 
-function withdraw(){
-alert("Contact customer support for withdraw");
-openTelegram();
+// OPEN ADMIN CHAT
+window.openAdminChat = function(email){
+  currentChatUser=email;
+  openSupport();
+  loadAdminChat();
 }
 
-function openTelegram(){
-window.open("https://t.me/raguadmin","_blank");
-}
+window.logout=()=>location.reload();
 
-// CHAT
-function sendMsg(){
-let m=msg.value;
-if(!m)return;
-chatBox.innerHTML+=`<p><b>You:</b> ${m}</p>`;
-msg.value="";
-}
+</script>
 
-// NAV
-function showHome(){supportPage.style.display="none"}
-function showMarket(){supportPage.style.display="none"}
-
-// CHART
-function changeCoin(sym){
-chart.src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:"+sym;
-}
-
-// DEPOSIT
-function openDeposit(){alert("Send USDT TRC20 to wallet");}
-
-</script></body>
+</body>
 </html>
