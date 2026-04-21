@@ -1,88 +1,103 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>TradeX</title>
+  <title>TradeX VIP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- TradingView -->
+  <script src="https://s3.tradingview.com/tv.js"></script>
+
   <style>
-body {
-  margin:0;
-  font-family: Arial;
-  background:#0b0b0b;
-  color:white;
-}
+    body{
+      margin:0;
+      font-family:Arial;
+      background:#0b0b0b;
+      color:white;
+    }
 
-/* TOP BAR */
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px;
-  background:#111;
-  border-bottom:2px solid #ff7a00;
-}
+    .container{
+      max-width:420px;
+      margin:auto;
+    }
 
-.topbar h2{
-  margin:0;
-  color:#ff7a00;
-}
+    .card{
+      background:#111;
+      padding:15px;
+      margin:10px;
+      border-radius:12px;
+    }
 
-.balance{
-  background:#ff7a00;
-  color:black;
-  padding:8px 12px;
-  border-radius:8px;
-  font-weight:bold;
-}
+    h1,h2,h3{color:#ff7a00;margin:5px 0}
 
-/* PAGES */
-.page{
-  padding:15px;
-}
+    input{
+      width:100%;
+      padding:10px;
+      margin:5px 0;
+      background:#1c1c1c;
+      border:none;
+      color:white;
+      border-radius:8px;
+    }
 
-/* COINS */
-.cardBox{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
+    button{
+      width:100%;
+      padding:10px;
+      margin-top:8px;
+      border:none;
+      border-radius:8px;
+      background:#ff7a00;
+      font-weight:bold;
+    }
 
-.coin{
-  background:#1c1c1c;
-  padding:12px;
-  border-radius:10px;
-  display:flex;
-  justify-content:space-between;
-  border-left:3px solid #ff7a00;
-}
+    .hidden{display:none}
 
-/* BOTTOM NAV */
-.bottomNav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  display:flex;
-  background:#111;
-  border-top:2px solid #ff7a00;
-}
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
 
-.bottomNav button{
-  flex:1;
-  padding:12px;
-  background:none;
-  border:none;
-  color:white;
-  font-weight:bold;
-}
+    .bottomNav{
+      position:fixed;
+      bottom:0;
+      width:100%;
+      display:flex;
+      background:#111;
+    }
 
-.bottomNav button:hover{
-  background:#ff7a00;
-  color:black;
-}
+    .bottomNav button{
+      flex:1;
+      background:none;
+      color:white;
+      padding:10px;
+    }
 
-/* HIDDEN */
-.hidden{display:none;}
+    .coin{
+      background:#1c1c1c;
+      padding:10px;
+      margin:5px 0;
+      border-left:3px solid #ff7a00;
+    }
+
+    #depositBox{
+      display:none;
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.8);
+      justify-content:center;
+      align-items:center;
+    }
+
+    #depositBox div{
+      background:#111;
+      padding:15px;
+      border-radius:10px;
+      width:300px;
+      text-align:center;
+    }
   </style>
 </head>
 
@@ -90,203 +105,194 @@ body {
 
 <div class="container">
 
-  <div class="card" id="authBox">
+<!-- AUTH -->
+<div id="authBox" class="card">
+  <h1>TradeX</h1>
 
-    <h1>TradeX</h1>
-
-    <!-- SIGNUP -->
-    <div id="signupBox">
-      <input type="email" id="signupEmail" placeholder="Email">
-      <input type="password" id="signupPass" placeholder="Password">
-      <button onclick="signup()">Sign Up</button>
-      <div class="switch" onclick="toggle()">Already have account? Login</div>
-    </div>
-
-    <!-- LOGIN -->
-    <div id="loginBox" class="hidden">
-      <input type="email" id="loginEmail" placeholder="Email">
-      <input type="password" id="loginPass" placeholder="Password">
-      <button onclick="login()">Login</button>
-      <div class="switch" onclick="toggle()">Create new account</div>
-    </div>
-
+  <div id="signupBox">
+    <input id="suEmail" placeholder="Email">
+    <input id="suPass" type="password" placeholder="Password">
+    <button onclick="signup()">Sign Up</button>
+    <p onclick="toggle()">Login</p>
   </div>
 
-  <!-- DASHBOARD SECTION -->
+  <div id="loginBox" class="hidden">
+    <input id="liEmail" placeholder="Email">
+    <input id="liPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p onclick="toggle()">Sign Up</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
 
-  <!-- TOP BAR -->
-  <div class="topbar">
+  <div class="card topbar">
     <div>
-      <h2>TradeX VIP</h2>
+      <h3>TradeX VIP</h3>
       <p id="userEmail"></p>
     </div>
-    <div class="balance">
-      $0.00
+
+    <div>
+      <button onclick="openDeposit()">+ Add Fund</button>
+      <h3 id="bal">$0</h3>
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
-  <div id="home" class="page">
-    <div id="market" class="page hidden">
-  <h3>📊 Live Market</h3>
-
-  <div id="prices">
-    Loading...
-  </div>
-    </div>
-    <h3>🔥 Hot Coins</h3>
-
-    <div class="cardBox">
-      <div class="coin">BTC/USDT <span>+2.5%</span></div>
-      <div class="coin">ETH/USDT <span>+1.2%</span></div>
-      <div class="coin">BNB/USDT <span>+3.1%</span></div>
-    </div>
+  <!-- HOME -->
+  <div id="home" class="page card">
+    <h3>🔥 Live Market</h3>
+    <div id="prices">Loading...</div>
   </div>
 
-  <div id="market" class="page hidden">
-    <h3>📊 Market</h3>
-    <p>Live charts coming soon...</p>
+  <!-- MARKET -->
+  <div id="market" class="page card hidden">
+    <h3>📊 Chart</h3>
+    <div id="chart"></div>
   </div>
 
-  <div id="asset" class="page hidden">
+  <!-- ASSET -->
+  <div id="asset" class="page card hidden">
     <h3>💰 Assets</h3>
-    <p>No assets yet</p>
+    <h2 id="balance">$0</h2>
   </div>
 
-  <div id="support" class="page hidden">
+  <!-- SUPPORT -->
+  <div id="support" class="page card hidden">
     <h3>🛟 Support</h3>
-    <p>Contact admin: support@tradex.com</p>
-  </div>
-
-  <!-- BOTTOM NAV -->
-  <div class="bottomNav">
-    <button onclick="showPage('home')">Home</button>
-    <button onclick="showPage('market')">Market</button>
-    <button onclick="showPage('asset')">Asset</button>
-    <button onclick="showPage('support')">Support</button>
+    <p>24/7 Help</p>
   </div>
 
 </div>
 
+<!-- NAV -->
+<div class="bottomNav">
+  <button onclick="showPage('home')">Home</button>
+  <button onclick="showPage('market')">Market</button>
+  <button onclick="showPage('asset')">Asset</button>
+  <button onclick="showPage('support')">Support</button>
+</div>
+
+</div>
+
+<!-- DEPOSIT -->
+<div id="depositBox">
+  <div>
+    <h3>Deposit USDT (TRC20)</h3>
+    <p style="word-break:break-all;">
+      TLdHhSyHgi8kMTY1Uh9Fb1SPP4fxWJjmb8
+    </p>
+    <img id="qr" width="200">
+    <button onclick="closeDeposit()">Close</button>
+  </div>
+</div>
+
 <script>
-  // SWITCH UI
-  function toggle() {
-    document.getElementById("signupBox").classList.toggle("hidden");
-    document.getElementById("loginBox").classList.toggle("hidden");
-  }
 
-  // SIGNUP
-  function signup() {
-    let email = document.getElementById("signupEmail").value;
-    let pass = document.getElementById("signupPass").value;
-
-    if (!email || !pass) return alert("Fill all fields");
-
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-
-    let exists = users.find(u => u.email === email);
-    if (exists) return alert("Email already exists");
-
-    users.push({ email, pass });
-    localStorage.setItem("users", JSON.stringify(users));
-
-    alert("Account created ✅ Now login");
-    toggle();
-  }
-
-  // LOGIN
-  function login() {
-    let email = document.getElementById("loginEmail").value;
-    let pass = document.getElementById("loginPass").value;
-
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-
-    let user = users.find(u => u.email === email && u.pass === pass);
-
-    if (!user) return alert("Invalid email or password");
-
-    localStorage.setItem("currentUser", JSON.stringify(user));
-
-    showDashboard();
-  }
-
-  function showDashboard() {
-    let user = JSON.parse(localStorage.getItem("currentUser"));
-
-    document.getElementById("authBox").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-
-    document.getElementById("userEmail").innerText = user.email;
-  }
-
-  function logout() {
-    localStorage.removeItem("currentUser");
-
-    document.getElementById("authBox").classList.remove("hidden");
-    document.getElementById("dashboard").classList.add("hidden");
-  }
-
-  // AUTO LOGIN CHECK
-  window.onload = function () {
-    if (localStorage.getItem("currentUser")) {
-      showDashboard();
-    }
-  }
-</script>
-<script>
-function showPage(page){
-  document.querySelectorAll(".page").forEach(p=>{
-    p.classList.add("hidden");
-  });
-
-  document.getElementById(page).classList.remove("hidden");
+/* AUTH */
+function toggle(){
+  document.getElementById("signupBox").classList.toggle("hidden");
+  document.getElementById("loginBox").classList.toggle("hidden");
 }
 
-// LOGIN SUCCESS ME DASHBOARD OPEN
+function signup(){
+  let u = JSON.parse(localStorage.getItem("users")||"[]");
+
+  u.push({
+    email:suEmail.value,
+    pass:suPass.value
+  });
+
+  localStorage.setItem("users",JSON.stringify(u));
+  alert("Account created");
+  toggle();
+}
+
+function login(){
+  let u = JSON.parse(localStorage.getItem("users")||"[]");
+
+  let user = u.find(x=>x.email==liEmail.value && x.pass==liPass.value);
+
+  if(!user) return alert("Invalid");
+
+  localStorage.setItem("currentUser",JSON.stringify(user));
+  showDashboard();
+}
+
 function showDashboard(){
   let user = JSON.parse(localStorage.getItem("currentUser"));
 
-  document.getElementById("authBox").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
+  authBox.classList.add("hidden");
+  dashboard.classList.remove("hidden");
 
-  document.getElementById("userEmail").innerText = user.email;
+  userEmail.innerText = user.email;
+
+  loadMarket();
+  loadChart();
+  updateBalance();
 }
-</script>
-  <script>
 
-async function loadMarket() {
-  let symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT"];
+/* NAV */
+function showPage(p){
+  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+  document.getElementById(p).classList.remove("hidden");
+}
 
-  let html = "";
+/* MARKET */
+async function loadMarket(){
+  let s=["BTCUSDT","ETHUSDT","BNBUSDT"];
+  let html="";
 
-  for (let sym of symbols) {
-    let res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${sym}`);
-    let data = await res.json();
+  for(let i of s){
+    let r=await fetch("https://api.binance.com/api/v3/ticker/price?symbol="+i);
+    let d=await r.json();
 
-    html += `
-      <div style="
-        background:#1c1c1c;
-        padding:12px;
-        margin:10px 0;
-        border-radius:10px;
-        border-left:3px solid #ff7a00;
-      ">
-        <b>${sym}</b><br>
-        Price: $${data.price}
-      </div>
-    `;
+    html+=`<div class="coin">${i} - $${d.price}</div>`;
   }
 
-  document.getElementById("prices").innerHTML = html;
+  prices.innerHTML=html;
 }
 
-// load on start
-loadMarket();
+/* CHART */
+function loadChart(){
+  new TradingView.widget({
+    container_id:"chart",
+    width:"100%",
+    height:300,
+    symbol:"BINANCE:BTCUSDT",
+    theme:"dark",
+    style:"1"
+  });
+}
 
-// refresh every 5 sec
-setInterval(loadMarket, 5000);
+/* DEPOSIT */
+function openDeposit(){
+  depositBox.style.display="flex";
 
-  </script>
+  let w="TLdHhSyHgi8kMTY1Uh9Fb1SPP4fxWJjmb8";
+
+  qr.src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+w;
+}
+
+function closeDeposit(){
+  depositBox.style.display="none";
+}
+
+/* BALANCE */
+function updateBalance(){
+  let b=localStorage.getItem("balance")||0;
+  balance.innerText="$"+b;
+  bal.innerText="$"+b;
+}
+
+/* AUTO LOGIN */
+window.onload=function(){
+  if(localStorage.getItem("currentUser")){
+    showDashboard();
+  }
+}
+
+</script>
+
 </body>
 </html>
