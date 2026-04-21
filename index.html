@@ -1,211 +1,189 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TradeX PRO</title>
+  <title>TradeX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body{margin:0;font-family:Arial;background:#0b0f19;color:#fff}
-.header{background:#ff9800;padding:15px;text-align:center;font-weight:bold}
-.card{background:#121826;padding:15px;margin:10px;border-radius:10px}
-input,button{width:100%;padding:10px;margin-top:10px;border:none;border-radius:5px}
-button{background:#ff9800;color:#fff}
-.bottom{position:fixed;bottom:0;width:100%;display:flex;background:#111}
-.bottom button{flex:1;background:#222}
-</style>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0b0b0b;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 380px;
+      padding: 20px;
+    }
+
+    .card {
+      background: #111;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 115, 0, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff7a00;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+      background: #1c1c1c;
+      color: white;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #ff7a00;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ff9a2f;
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 10px;
+      color: #aaa;
+      cursor: pointer;
+    }
+
+    .hidden { display: none; }
+
+    .dashboard {
+      text-align: center;
+    }
+
+    .logout {
+      background: red;
+      margin-top: 15px;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="header">🔥 TradeX PRO</div>
+<div class="container">
 
-<div id="auth">
-<div class="card">
-<h3>Signup</h3>
-<input id="su_email" placeholder="Email">
-<input id="su_pass" placeholder="Password">
-<button onclick="signup()">Signup</button>
-</div>
+  <div class="card" id="authBox">
 
-<div class="card">
-<h3>Login</h3>
-<input id="li_email" placeholder="Email">
-<input id="li_pass" placeholder="Password">
-<button onclick="login()">Login</button>
-</div>
-</div>
+    <h1>TradeX</h1>
 
-<div id="dashboard" style="display:none">
+    <!-- SIGNUP -->
+    <div id="signupBox">
+      <input type="email" id="signupEmail" placeholder="Email">
+      <input type="password" id="signupPass" placeholder="Password">
+      <button onclick="signup()">Sign Up</button>
+      <div class="switch" onclick="toggle()">Already have account? Login</div>
+    </div>
 
-<div class="card">
-<h3 id="welcome"></h3>
-<h2>Balance: $<span id="bal">0</span></h2>
-</div>
+    <!-- LOGIN -->
+    <div id="loginBox" class="hidden">
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPass" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <div class="switch" onclick="toggle()">Create new account</div>
+    </div>
 
-<div class="card">
-<h3>Trade</h3>
-<input id="amount" placeholder="Enter amount">
-<button onclick="buy()">Buy</button>
-<button onclick="sell()">Sell</button>
-</div>
+  </div>
 
-<div class="card">
-<h3>Deposit</h3>
-<button onclick="openDeposit()">Add Funds</button>
-<div id="depositBox" style="display:none">
-<p>TRC20 Wallet:</p>
-<p id="wallet">TQ6RJsuo9xah3GbL4U3fuboTYhGkdY6CB</p>
-<button onclick="copyWallet()">Copy</button>
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TQ6RJsuo9xah3GbL4U3fuboTYhGkdY6CB">
-</div>
-<button onclick="withdraw()">Withdraw</button>
-</div>
+  <!-- DASHBOARD -->
+  <div class="card hidden" id="dashboard">
+    <div class="dashboard">
+      <h1>Welcome 🚀</h1>
+      <p id="userEmail"></p>
+      <h2>Balance: $0</h2>
 
-<div class="card">
-<h3>Market</h3>
-<button onclick="setCoin('BTCUSDT')">BTC</button>
-<button onclick="setCoin('ETHUSDT')">ETH</button>
-<button onclick="setCoin('BNBUSDT')">BNB</button>
-<iframe id="chart" width="100%" height="300"></iframe>
-</div>
-
-<div class="card">
-<h3>Support 💬</h3>
-<button onclick="openSupport()">Open Chat</button>
-</div>
-
-<div id="adminPanel" class="card" style="display:none">
-<h3>Admin Panel</h3>
-<input id="targetEmail" placeholder="User Email">
-<input id="newBal" placeholder="New Balance">
-<button onclick="updateBalance()">Update</button>
-<div id="messages"></div>
-</div>
-
-<button onclick="logout()">Logout</button>
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
 
 </div>
 
-<!-- CHAT -->
-<div id="chatBox" style="display:none;position:fixed;top:0;width:100%;height:100%;background:#000;">
-<div style="padding:10px;background:#111">
-Support Chat
-<button onclick="closeSupport()" style="float:right">X</button>
-</div>
-
-<div id="chatArea" style="height:70%;overflow:auto"></div>
-
-<div style="position:absolute;bottom:0;width:100%">
-<input id="msg">
-<button onclick="sendMsg()">Send</button>
-</div>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "PASTE_KEY",
-  authDomain: "PASTE_DOMAIN",
-  projectId: "PASTE_ID"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-let currentUser;
-
-// SIGNUP
-window.signup = async ()=>{
- let user = await createUserWithEmailAndPassword(auth,su_email.value,su_pass.value);
- await setDoc(doc(db,"users",user.user.uid),{
-  email:su_email.value,
-  balance:0
- });
- alert("Signup success");
-}
-
-// LOGIN
-window.login = async ()=>{
- let res = await signInWithEmailAndPassword(auth,li_email.value,li_pass.value);
-
- currentUser = res.user;
-
- let snap = await getDoc(doc(db,"users",currentUser.uid));
- let data = snap.data();
-
- welcome.innerText=data.email;
- bal.innerText=data.balance;
-
- authDiv.style.display="none";
- dashboard.style.display="block";
-
- if(data.email=="admin@tradex.com"){
-  adminPanel.style.display="block";
-  loadMessages();
- }
-}
-
-// BUY
-window.buy = ()=>alert("Add funds first");
-
-// SELL
-window.sell = ()=>alert("Withdraw coming soon");
-
-// DEPOSIT
-window.openDeposit=()=>depositBox.style.display="block";
-window.copyWallet=()=>navigator.clipboard.writeText(wallet.innerText);
-
-// WITHDRAW
-window.withdraw=()=>openSupport();
-
-// MARKET
-window.setCoin=(c)=>chart.src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:"+c;
-
-// SUPPORT
-window.openSupport=()=>chatBox.style.display="block";
-window.closeSupport=()=>chatBox.style.display="none";
-
-window.sendMsg=async ()=>{
- await addDoc(collection(db,"support"),{
-  email:currentUser.email,
-  msg:msg.value
- });
- msg.value="";
- loadMessages();
-}
-
-// ADMIN
-async function loadMessages(){
- let snap = await getDocs(collection(db,"support"));
- let html="";
- snap.forEach(d=>{
-  let data=d.data();
-  html+=`<p>${data.email}: ${data.msg}</p>`;
- });
- messages.innerHTML=html;
-}
-
-window.updateBalance=async ()=>{
- let snap = await getDocs(collection(db,"users"));
- snap.forEach(async d=>{
-  if(d.data().email==targetEmail.value){
-   await updateDoc(doc(db,"users",d.id),{
-    balance:Number(newBal.value)
-   });
-   alert("Updated");
+<script>
+  // SWITCH UI
+  function toggle() {
+    document.getElementById("signupBox").classList.toggle("hidden");
+    document.getElementById("loginBox").classList.toggle("hidden");
   }
- });
-}
 
-// LOGOUT
-window.logout=()=>location.reload();
+  // SIGNUP
+  function signup() {
+    let email = document.getElementById("signupEmail").value;
+    let pass = document.getElementById("signupPass").value;
 
-window.onload=()=>setCoin("BTCUSDT");
+    if (!email || !pass) return alert("Fill all fields");
 
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    let exists = users.find(u => u.email === email);
+    if (exists) return alert("Email already exists");
+
+    users.push({ email, pass });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Account created ✅ Now login");
+    toggle();
+  }
+
+  // LOGIN
+  function login() {
+    let email = document.getElementById("loginEmail").value;
+    let pass = document.getElementById("loginPass").value;
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    let user = users.find(u => u.email === email && u.pass === pass);
+
+    if (!user) return alert("Invalid email or password");
+
+    localStorage.setItem("currentUser", JSON.stringify(user));
+
+    showDashboard();
+  }
+
+  function showDashboard() {
+    let user = JSON.parse(localStorage.getItem("currentUser"));
+
+    document.getElementById("authBox").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+
+    document.getElementById("userEmail").innerText = user.email;
+  }
+
+  function logout() {
+    localStorage.removeItem("currentUser");
+
+    document.getElementById("authBox").classList.remove("hidden");
+    document.getElementById("dashboard").classList.add("hidden");
+  }
+
+  // AUTO LOGIN CHECK
+  window.onload = function () {
+    if (localStorage.getItem("currentUser")) {
+      showDashboard();
+    }
+  }
 </script>
 
 </body>
