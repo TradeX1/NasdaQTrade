@@ -5,86 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    
-body {
-  margin:0;
-  font-family: Arial;
-  background:#0b0b0b;
-  color:white;
-}
-
-/* TOP BAR */
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px;
-  background:#111;
-  border-bottom:2px solid #ff7a00;
-}
-
-.topbar h2{
-  margin:0;
-  color:#ff7a00;
-}
-
-.balance{
-  background:#ff7a00;
-  color:black;
-  padding:8px 12px;
-  border-radius:8px;
-  font-weight:bold;
-}
-
-/* PAGES */
-.page{
-  padding:15px;
-}
-
-/* COINS */
-.cardBox{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.coin{
-  background:#1c1c1c;
-  padding:12px;
-  border-radius:10px;
-  display:flex;
-  justify-content:space-between;
-  border-left:3px solid #ff7a00;
-}
-
-/* BOTTOM NAV */
-.bottomNav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  display:flex;
-  background:#111;
-  border-top:2px solid #ff7a00;
-}
-
-.bottomNav button{
-  flex:1;
-  padding:12px;
-  background:none;
-  border:none;
-  color:white;
-  font-weight:bold;
-}
-
-.bottomNav button:hover{
-  background:#ff7a00;
-  color:black;
-}
-
-/* HIDDEN */
-.hidden{display:none;}
-</style>
     body {
       margin: 0;
       font-family: Arial;
@@ -236,7 +156,6 @@ body {
   </div>
 
 </div>
-<script>
   // SWITCH UI
   function toggle() {
     document.getElementById("signupBox").classList.toggle("hidden");
