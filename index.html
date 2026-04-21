@@ -18,6 +18,9 @@
     .bottomNav{position:fixed;bottom:0;width:100%;display:flex;background:#111;}
     .bottomNav button{flex:1;background:none;color:white;padding:10px;}
     .coin{background:#1c1c1c;padding:10px;margin:5px 0;border-left:3px solid #ff7a00;}
+    .activity{background:#1c1c1c;padding:8px;margin:5px 0;border-radius:8px;font-size:13px;}
+    .green{color:#00ff9c;}
+    .red{color:#ff4d4d;}
   </style>
 </head>
 
@@ -63,6 +66,9 @@
   <div id="home" class="page card">
     <h3>🔥 Hot Coins</h3>
     <div id="prices">Loading...</div>
+
+    <h3>📢 Live Activity (Demo)</h3>
+    <div id="activity"></div>
   </div>
 
   <!-- MARKET -->
@@ -80,7 +86,9 @@
   <!-- SUPPORT -->
   <div id="support" class="page card hidden">
     <h3>🛟 Support</h3>
-    <p>Contact customer support</p>
+    <a href="https://t.me/tradexsupport17" target="_blank" style="color:#ff7a00;">
+      Contact on Telegram
+    </a>
   </div>
 
 </div>
@@ -145,13 +153,9 @@ function showPage(p){
   document.getElementById(p).classList.remove("hidden");
 }
 
-/* MARKET + HOT COINS */
+/* HOT COINS */
 async function loadMarket(){
-  let coins=[
-    "BTCUSDT","ETHUSDT","BNBUSDT","SOLUSDT","XRPUSDT",
-    "ADAUSDT","DOGEUSDT","TRXUSDT","DOTUSDT","MATICUSDT"
-  ];
-
+  let coins=["BTCUSDT","ETHUSDT","BNBUSDT","SOLUSDT","XRPUSDT","ADAUSDT","DOGEUSDT","TRXUSDT","DOTUSDT","MATICUSDT"];
   let html="";
 
   for(let c of coins){
@@ -161,7 +165,6 @@ async function loadMarket(){
     html+=`
     <div class="coin" onclick="openChart('${c}')">
       <b>${c}</b> - $${d.price}
-
       <div>
         <button onclick="event.stopPropagation(); tradeAlert()">Buy</button>
         <button onclick="event.stopPropagation(); tradeAlert()">Sell</button>
@@ -172,7 +175,7 @@ async function loadMarket(){
   prices.innerHTML=html;
 }
 
-/* CHART SWITCH */
+/* CHART */
 function openChart(symbol){
   showPage("market");
   chart.innerHTML="";
@@ -186,8 +189,9 @@ function openChart(symbol){
   });
 }
 
+/* TELEGRAM SUPPORT */
 function tradeAlert(){
-  alert("Contact Customer Support to trade 📞");
+  window.open("https://t.me/tradexsupport17","_blank");
 }
 
 /* DEPOSIT */
@@ -207,6 +211,28 @@ function updateBalance(){
   balance.innerText="$"+b;
   bal.innerText="$"+b;
 }
+
+/* DEMO ACTIVITY */
+let names=["Rahul","Amit","Priya","Arjun","Neha","Ravi","Kiran","Sana","Ali","Usman","John","David","Chen","Ahmed","Sara"];
+
+function randomActivity(){
+  let name=names[Math.floor(Math.random()*names.length)];
+  let amount=(Math.random()*500+50).toFixed(2);
+  let type=Math.random()>0.5?"deposit":"withdraw";
+  let color=type==="deposit"?"green":"red";
+
+  let text=`<div class="activity ${color}">
+  ${name} ${type==="deposit"?"deposited":"withdrew"} $${amount}
+  </div>`;
+
+  activity.innerHTML=text+activity.innerHTML;
+
+  if(activity.children.length>10){
+    activity.removeChild(activity.lastChild);
+  }
+}
+
+setInterval(randomActivity,3000);
 
 /* AUTO LOGIN */
 window.onload=function(){
