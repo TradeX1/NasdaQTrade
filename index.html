@@ -5,79 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0b0b0b;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+body {
+  margin:0;
+  font-family: Arial;
+  background:#0b0b0b;
+  color:white;
+}
 
-    .container {
-      width: 100%;
-      max-width: 380px;
-      padding: 20px;
-    }
+/* TOP BAR */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  background:#111;
+  border-bottom:2px solid #ff7a00;
+}
 
-    .card {
-      background: #111;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255, 115, 0, 0.3);
-    }
+.topbar h2{
+  margin:0;
+  color:#ff7a00;
+}
 
-    h1 {
-      text-align: center;
-      color: #ff7a00;
-    }
+.balance{
+  background:#ff7a00;
+  color:black;
+  padding:8px 12px;
+  border-radius:8px;
+  font-weight:bold;
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 8px;
-      background: #1c1c1c;
-      color: white;
-      outline: none;
-    }
+/* PAGES */
+.page{
+  padding:15px;
+}
 
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #ff7a00;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-    }
+/* COINS */
+.cardBox{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
 
-    button:hover {
-      background: #ff9a2f;
-    }
+.coin{
+  background:#1c1c1c;
+  padding:12px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+  border-left:3px solid #ff7a00;
+}
 
-    .switch {
-      text-align: center;
-      margin-top: 10px;
-      color: #aaa;
-      cursor: pointer;
-    }
+/* BOTTOM NAV */
+.bottomNav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  display:flex;
+  background:#111;
+  border-top:2px solid #ff7a00;
+}
 
-    .hidden { display: none; }
+.bottomNav button{
+  flex:1;
+  padding:12px;
+  background:none;
+  border:none;
+  color:white;
+  font-weight:bold;
+}
 
-    .dashboard {
-      text-align: center;
-    }
+.bottomNav button:hover{
+  background:#ff7a00;
+  color:black;
+}
 
-    .logout {
-      background: red;
-      margin-top: 15px;
-    }
+/* HIDDEN */
+.hidden{display:none;}
   </style>
 </head>
 
@@ -107,15 +112,52 @@
 
   </div>
 
-  <!-- DASHBOARD -->
-  <div class="card hidden" id="dashboard">
-    <div class="dashboard">
-      <h1>Welcome 🚀</h1>
-      <p id="userEmail"></p>
-      <h2>Balance: $0</h2>
+  <!-- DASHBOARD SECTION -->
+<div id="dashboard" class="hidden">
 
-      <button class="logout" onclick="logout()">Logout</button>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div>
+      <h2>TradeX VIP</h2>
+      <p id="userEmail"></p>
     </div>
+    <div class="balance">
+      $0.00
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="home" class="page">
+    <h3>🔥 Hot Coins</h3>
+
+    <div class="cardBox">
+      <div class="coin">BTC/USDT <span>+2.5%</span></div>
+      <div class="coin">ETH/USDT <span>+1.2%</span></div>
+      <div class="coin">BNB/USDT <span>+3.1%</span></div>
+    </div>
+  </div>
+
+  <div id="market" class="page hidden">
+    <h3>📊 Market</h3>
+    <p>Live charts coming soon...</p>
+  </div>
+
+  <div id="asset" class="page hidden">
+    <h3>💰 Assets</h3>
+    <p>No assets yet</p>
+  </div>
+
+  <div id="support" class="page hidden">
+    <h3>🛟 Support</h3>
+    <p>Contact admin: support@tradex.com</p>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottomNav">
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('market')">Market</button>
+    <button onclick="showPage('asset')">Asset</button>
+    <button onclick="showPage('support')">Support</button>
   </div>
 
 </div>
@@ -185,6 +227,24 @@
     }
   }
 </script>
+<script>
+function showPage(page){
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.add("hidden");
+  });
 
+  document.getElementById(page).classList.remove("hidden");
+}
+
+// LOGIN SUCCESS ME DASHBOARD OPEN
+function showDashboard(){
+  let user = JSON.parse(localStorage.getItem("currentUser"));
+
+  document.getElementById("authBox").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+
+  document.getElementById("userEmail").innerText = user.email;
+}
+</script>
 </body>
 </html>
