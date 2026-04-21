@@ -5,6 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
+    
+body {
+  margin:0;
+  font-family: Arial;
+  background:#0b0b0b;
+  color:white;
+}
+
+/* TOP BAR */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  background:#111;
+  border-bottom:2px solid #ff7a00;
+}
+
+.topbar h2{
+  margin:0;
+  color:#ff7a00;
+}
+
+.balance{
+  background:#ff7a00;
+  color:black;
+  padding:8px 12px;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+/* PAGES */
+.page{
+  padding:15px;
+}
+
+/* COINS */
+.cardBox{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.coin{
+  background:#1c1c1c;
+  padding:12px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+  border-left:3px solid #ff7a00;
+}
+
+/* BOTTOM NAV */
+.bottomNav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  display:flex;
+  background:#111;
+  border-top:2px solid #ff7a00;
+}
+
+.bottomNav button{
+  flex:1;
+  padding:12px;
+  background:none;
+  border:none;
+  color:white;
+  font-weight:bold;
+}
+
+.bottomNav button:hover{
+  background:#ff7a00;
+  color:black;
+}
+
+/* HIDDEN */
+.hidden{display:none;}
+</style>
     body {
       margin: 0;
       font-family: Arial;
@@ -107,19 +187,55 @@
 
   </div>
 
-  <!-- DASHBOARD -->
-  <div class="card hidden" id="dashboard">
-    <div class="dashboard">
-      <h1>Welcome 🚀</h1>
-      <p id="userEmail"></p>
-      <h2>Balance: $0</h2>
+  <!-- DASHBOARD SECTION -->
+<div id="dashboard" class="hidden">
 
-      <button class="logout" onclick="logout()">Logout</button>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div>
+      <h2>TradeX VIP</h2>
+      <p id="userEmail"></p>
+    </div>
+    <div class="balance">
+      $0.00
     </div>
   </div>
 
-</div>
+  <!-- MAIN CONTENT -->
+  <div id="home" class="page">
+    <h3>🔥 Hot Coins</h3>
 
+    <div class="cardBox">
+      <div class="coin">BTC/USDT <span>+2.5%</span></div>
+      <div class="coin">ETH/USDT <span>+1.2%</span></div>
+      <div class="coin">BNB/USDT <span>+3.1%</span></div>
+    </div>
+  </div>
+
+  <div id="market" class="page hidden">
+    <h3>📊 Market</h3>
+    <p>Live charts coming soon...</p>
+  </div>
+
+  <div id="asset" class="page hidden">
+    <h3>💰 Assets</h3>
+    <p>No assets yet</p>
+  </div>
+
+  <div id="support" class="page hidden">
+    <h3>🛟 Support</h3>
+    <p>Contact admin: support@tradex.com</p>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottomNav">
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('market')">Market</button>
+    <button onclick="showPage('asset')">Asset</button>
+    <button onclick="showPage('support')">Support</button>
+  </div>
+
+</div>
 <script>
   // SWITCH UI
   function toggle() {
