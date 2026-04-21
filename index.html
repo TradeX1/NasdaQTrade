@@ -4,100 +4,20 @@
   <title>TradeX VIP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- TradingView -->
   <script src="https://s3.tradingview.com/tv.js"></script>
 
   <style>
-    body{
-      margin:0;
-      font-family:Arial;
-      background:#0b0b0b;
-      color:white;
-    }
-
-    .container{
-      max-width:420px;
-      margin:auto;
-    }
-
-    .card{
-      background:#111;
-      padding:15px;
-      margin:10px;
-      border-radius:12px;
-    }
-
-    h1,h2,h3{color:#ff7a00;margin:5px 0}
-
-    input{
-      width:100%;
-      padding:10px;
-      margin:5px 0;
-      background:#1c1c1c;
-      border:none;
-      color:white;
-      border-radius:8px;
-    }
-
-    button{
-      width:100%;
-      padding:10px;
-      margin-top:8px;
-      border:none;
-      border-radius:8px;
-      background:#ff7a00;
-      font-weight:bold;
-    }
-
-    .hidden{display:none}
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    }
-
-    .bottomNav{
-      position:fixed;
-      bottom:0;
-      width:100%;
-      display:flex;
-      background:#111;
-    }
-
-    .bottomNav button{
-      flex:1;
-      background:none;
-      color:white;
-      padding:10px;
-    }
-
-    .coin{
-      background:#1c1c1c;
-      padding:10px;
-      margin:5px 0;
-      border-left:3px solid #ff7a00;
-    }
-
-    #depositBox{
-      display:none;
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background:rgba(0,0,0,0.8);
-      justify-content:center;
-      align-items:center;
-    }
-
-    #depositBox div{
-      background:#111;
-      padding:15px;
-      border-radius:10px;
-      width:300px;
-      text-align:center;
-    }
+    body{margin:0;font-family:Arial;background:#0b0b0b;color:white;}
+    .container{max-width:420px;margin:auto;}
+    .card{background:#111;padding:15px;margin:10px;border-radius:12px;}
+    h1,h2,h3{color:#ff7a00;}
+    input{width:100%;padding:10px;margin:5px 0;background:#1c1c1c;border:none;color:white;border-radius:8px;}
+    button{padding:8px;border:none;border-radius:6px;background:#ff7a00;font-size:12px;margin:2px;}
+    .hidden{display:none;}
+    .topbar{display:flex;justify-content:space-between;align-items:center;}
+    .bottomNav{position:fixed;bottom:0;width:100%;display:flex;background:#111;}
+    .bottomNav button{flex:1;background:none;color:white;padding:10px;}
+    .coin{background:#1c1c1c;padding:10px;margin:5px 0;border-left:3px solid #ff7a00;}
   </style>
 </head>
 
@@ -141,13 +61,13 @@
 
   <!-- HOME -->
   <div id="home" class="page card">
-    <h3>🔥 Live Market</h3>
+    <h3>🔥 Hot Coins</h3>
     <div id="prices">Loading...</div>
   </div>
 
   <!-- MARKET -->
   <div id="market" class="page card hidden">
-    <h3>📊 Chart</h3>
+    <h3>📊 Live Chart</h3>
     <div id="chart"></div>
   </div>
 
@@ -160,7 +80,7 @@
   <!-- SUPPORT -->
   <div id="support" class="page card hidden">
     <h3>🛟 Support</h3>
-    <p>24/7 Help</p>
+    <p>Contact customer support</p>
   </div>
 
 </div>
@@ -176,12 +96,10 @@
 </div>
 
 <!-- DEPOSIT -->
-<div id="depositBox">
-  <div>
+<div id="depositBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;">
+  <div style="background:#111;padding:15px;border-radius:10px;width:300px;text-align:center;">
     <h3>Deposit USDT (TRC20)</h3>
-    <p style="word-break:break-all;">
-      TLdHhSyHgi8kMTY1Uh9Fb1SPP4fxWJjmb8
-    </p>
+    <p style="word-break:break-all;">TLdHhSyHgi8kMTY1Uh9Fb1SPP4fxWJjmb8</p>
     <img id="qr" width="200">
     <button onclick="closeDeposit()">Close</button>
   </div>
@@ -191,44 +109,33 @@
 
 /* AUTH */
 function toggle(){
-  document.getElementById("signupBox").classList.toggle("hidden");
-  document.getElementById("loginBox").classList.toggle("hidden");
+  signupBox.classList.toggle("hidden");
+  loginBox.classList.toggle("hidden");
 }
 
 function signup(){
-  let u = JSON.parse(localStorage.getItem("users")||"[]");
-
-  u.push({
-    email:suEmail.value,
-    pass:suPass.value
-  });
-
+  let u=JSON.parse(localStorage.getItem("users")||"[]");
+  u.push({email:suEmail.value,pass:suPass.value});
   localStorage.setItem("users",JSON.stringify(u));
   alert("Account created");
   toggle();
 }
 
 function login(){
-  let u = JSON.parse(localStorage.getItem("users")||"[]");
-
-  let user = u.find(x=>x.email==liEmail.value && x.pass==liPass.value);
-
-  if(!user) return alert("Invalid");
-
+  let u=JSON.parse(localStorage.getItem("users")||"[]");
+  let user=u.find(x=>x.email==liEmail.value && x.pass==liPass.value);
+  if(!user)return alert("Invalid");
   localStorage.setItem("currentUser",JSON.stringify(user));
   showDashboard();
 }
 
 function showDashboard(){
-  let user = JSON.parse(localStorage.getItem("currentUser"));
-
+  let user=JSON.parse(localStorage.getItem("currentUser"));
   authBox.classList.add("hidden");
   dashboard.classList.remove("hidden");
-
-  userEmail.innerText = user.email;
+  userEmail.innerText=user.email;
 
   loadMarket();
-  loadChart();
   updateBalance();
 }
 
@@ -238,39 +145,55 @@ function showPage(p){
   document.getElementById(p).classList.remove("hidden");
 }
 
-/* MARKET */
+/* MARKET + HOT COINS */
 async function loadMarket(){
-  let s=["BTCUSDT","ETHUSDT","BNBUSDT"];
+  let coins=[
+    "BTCUSDT","ETHUSDT","BNBUSDT","SOLUSDT","XRPUSDT",
+    "ADAUSDT","DOGEUSDT","TRXUSDT","DOTUSDT","MATICUSDT"
+  ];
+
   let html="";
 
-  for(let i of s){
-    let r=await fetch("https://api.binance.com/api/v3/ticker/price?symbol="+i);
+  for(let c of coins){
+    let r=await fetch("https://api.binance.com/api/v3/ticker/price?symbol="+c);
     let d=await r.json();
 
-    html+=`<div class="coin">${i} - $${d.price}</div>`;
+    html+=`
+    <div class="coin" onclick="openChart('${c}')">
+      <b>${c}</b> - $${d.price}
+
+      <div>
+        <button onclick="event.stopPropagation(); tradeAlert()">Buy</button>
+        <button onclick="event.stopPropagation(); tradeAlert()">Sell</button>
+      </div>
+    </div>`;
   }
 
   prices.innerHTML=html;
 }
 
-/* CHART */
-function loadChart(){
+/* CHART SWITCH */
+function openChart(symbol){
+  showPage("market");
+  chart.innerHTML="";
   new TradingView.widget({
     container_id:"chart",
     width:"100%",
     height:300,
-    symbol:"BINANCE:BTCUSDT",
+    symbol:"BINANCE:"+symbol,
     theme:"dark",
     style:"1"
   });
 }
 
+function tradeAlert(){
+  alert("Contact Customer Support to trade 📞");
+}
+
 /* DEPOSIT */
 function openDeposit(){
   depositBox.style.display="flex";
-
   let w="TLdHhSyHgi8kMTY1Uh9Fb1SPP4fxWJjmb8";
-
   qr.src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+w;
 }
 
